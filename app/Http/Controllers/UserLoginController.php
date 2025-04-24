@@ -30,7 +30,41 @@ class UserLoginController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/login",
+     *     tags={"Utilisateurs"},
+     *     summary="Connexion d'un utilisateur",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"matricule", "password"},
+     *             @OA\Property(property="matricule", type="string", format="email", example="user@example.com"),
+     *             @OA\Property(property="password", type="string", example="password123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Connexion réussie",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="user", type="object",
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="name", type="string"),
+     *                 @OA\Property(property="matricule", type="string"),
+     *                 @OA\Property(property="role", type="string")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Identifiants invalides",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     )
+     * )
      */
     public function store(Request $request)
     {
@@ -43,8 +77,7 @@ class UserLoginController extends Controller
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json([
                 'success'=>false,
-                'message' => 'Identifiants invalides.'],
-                401);
+                'message' => 'Identifiants invalides.']);
         }
         return response()->json([
             'success'=>true,
@@ -53,6 +86,48 @@ class UserLoginController extends Controller
         ]);
     }
 
+
+    /**
+     * @OA\Post(
+     *     path="/api/register",
+     *     tags={"Utilisateurs"},
+     *     summary="Inscription d'un nouvel utilisateur",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name", "matricule", "password", "password_confirmation"},
+     *             @OA\Property(property="name", type="string", example="John Doe"),
+     *             @OA\Property(property="matricule", type="string", example="user123"),
+     *             @OA\Property(property="password", type="string", example="password123"),
+     *             @OA\Property(property="password_confirmation", type="string", example="password123"),
+     *             @OA\Property(property="role", type="string", example="etudiant", enum={"etudiant", "chauffeur", "admin"})
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Utilisateur enregistré avec succès",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="user", type="object",
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="name", type="string"),
+     *                 @OA\Property(property="matricule", type="string"),
+     *                 @OA\Property(property="role", type="string")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur lors de l'inscription",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="error", type="string")
+     *         )
+     *     )
+     * )
+     */
 
     public function register(Request $request)
     {
