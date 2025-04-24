@@ -1,0 +1,533 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "UniTracker API",
+        "description": "L'API UniTracker permet de suivre en temps réel les bus universitaires, planifier les trajets, et recevoir des notifications intelligentes. Elle facilite la gestion des transports pour les étudiants et les chauffeurs via des requêtes HTTP sécurisées.",
+        "termsOfService": "https://unitracker.ucbc.cd/terms",
+        "contact": {
+            "name": "Équipe Support UniTracker",
+            "email": "support@unitracker.cd"
+        },
+        "license": {
+            "name": "UCBC / UniTracker",
+            "url": "https://unitracker.ucbc.cd/license"
+        },
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "https://unitracker.ucbc.cd",
+            "description": "Serveur de production"
+        }
+    ],
+    "paths": {
+        "/api/buses": {
+            "get": {
+                "tags": [
+                    "Bus"
+                ],
+                "summary": "Lister tous les bus",
+                "operationId": "f519550ca830b5dcb346e18781ed50b9",
+                "responses": {
+                    "200": {
+                        "description": "Liste des bus avec chauffeurs",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "buses": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "immatriculation": {
+                                                        "type": "string"
+                                                    },
+                                                    "marque": {
+                                                        "type": "string"
+                                                    },
+                                                    "modele": {
+                                                        "type": "string"
+                                                    },
+                                                    "couleur": {
+                                                        "type": "string"
+                                                    },
+                                                    "status": {
+                                                        "type": "string"
+                                                    },
+                                                    "chauffeur_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Bus"
+                ],
+                "summary": "Créer un nouveau bus",
+                "operationId": "e1409a5d1e40f031070c6614524fe308",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "immatriculation",
+                                    "chauffeur_id"
+                                ],
+                                "properties": {
+                                    "immatriculation": {
+                                        "type": "string",
+                                        "example": "BENI-123"
+                                    },
+                                    "marque": {
+                                        "type": "string",
+                                        "example": "Toyota"
+                                    },
+                                    "modele": {
+                                        "type": "string",
+                                        "example": "Coaster"
+                                    },
+                                    "couleur": {
+                                        "type": "string",
+                                        "example": "Blanc"
+                                    },
+                                    "chauffeur_id": {
+                                        "type": "integer",
+                                        "example": 3
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Bus enregistré avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "bus": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "immatriculation": {
+                                                    "type": "string"
+                                                },
+                                                "marque": {
+                                                    "type": "string"
+                                                },
+                                                "modele": {
+                                                    "type": "string"
+                                                },
+                                                "couleur": {
+                                                    "type": "string"
+                                                },
+                                                "chauffeur_id": {
+                                                    "type": "integer"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/bus-journals": {
+            "get": {
+                "tags": [
+                    "BusJournal"
+                ],
+                "summary": "Lister les trajets du carnet de bord",
+                "operationId": "a016430eb2360c7d54ee7d4fed91f360",
+                "parameters": [
+                    {
+                        "name": "bus_id",
+                        "in": "query",
+                        "description": "Filtrer par ID de bus",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "chauffeur_id",
+                        "in": "query",
+                        "description": "Filtrer par ID de chauffeur",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des journaux",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "journaux": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "bus_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "chauffeur_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "depart": {
+                                                        "type": "string"
+                                                    },
+                                                    "destination": {
+                                                        "type": "string"
+                                                    },
+                                                    "statut": {
+                                                        "type": "string"
+                                                    },
+                                                    "heure_depart": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "heure_arrivee": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "remarques": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "BusJournal"
+                ],
+                "summary": "Créer un nouveau trajet dans le carnet de bord",
+                "operationId": "6ee60a305093583ccb3668eeb093b18b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "bus_id",
+                                    "chauffeur_id",
+                                    "depart",
+                                    "destination",
+                                    "heure_depart"
+                                ],
+                                "properties": {
+                                    "bus_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "chauffeur_id": {
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "depart": {
+                                        "type": "string",
+                                        "example": "Campus UCBC"
+                                    },
+                                    "destination": {
+                                        "type": "string",
+                                        "example": "Faculté de Médecine"
+                                    },
+                                    "heure_depart": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-04-15T08:00:00Z"
+                                    },
+                                    "remarques": {
+                                        "type": "string",
+                                        "example": "Départ à l'heure"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Trajet enregistré avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "journal": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "statut": {
+                                                    "type": "string"
+                                                },
+                                                "depart": {
+                                                    "type": "string"
+                                                },
+                                                "destination": {
+                                                    "type": "string"
+                                                },
+                                                "heure_depart": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/bus-locations": {
+            "post": {
+                "tags": [
+                    "BusLocation"
+                ],
+                "summary": "Enregistrer la position GPS actuelle d’un bus",
+                "operationId": "a2ab7dee6891bb3fbe0079c01ab98d9f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "bus_id",
+                                    "latitude",
+                                    "longitude"
+                                ],
+                                "properties": {
+                                    "bus_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "latitude": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": -1.6345623
+                                    },
+                                    "longitude": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 29.1245891
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Coordonnées enregistrées avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "bus_id": {
+                                                    "type": "integer"
+                                                },
+                                                "latitude": {
+                                                    "type": "number"
+                                                },
+                                                "longitude": {
+                                                    "type": "number"
+                                                },
+                                                "captured_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/bus/{bus_id}/last-location": {
+            "get": {
+                "tags": [
+                    "BusLocation"
+                ],
+                "summary": "Afficher la dernière position connue d’un bus",
+                "operationId": "6b9c0adfea6da7cc8c0d551523b02594",
+                "parameters": [
+                    {
+                        "name": "bus_id",
+                        "in": "path",
+                        "description": "ID du bus",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dernière position du bus",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "bus_id": {
+                                            "type": "integer"
+                                        },
+                                        "latitude": {
+                                            "type": "number"
+                                        },
+                                        "longitude": {
+                                            "type": "number"
+                                        },
+                                        "captured_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Aucune position trouvée pour ce bus",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "BusJournal",
+            "description": "Carnet de bord des trajets de bus"
+        },
+        {
+            "name": "BusLocation",
+            "description": "Coordonnées GPS des bus en temps réel"
+        },
+        {
+            "name": "Bus",
+            "description": "Bus"
+        }
+    ]
+}
