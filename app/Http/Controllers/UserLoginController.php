@@ -31,7 +31,7 @@ class UserLoginController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/login",
+     *     path="/api/user/login",
      *     tags={"Utilisateurs"},
      *     summary="Connexion d'un utilisateur",
      *     @OA\RequestBody(
@@ -69,7 +69,7 @@ class UserLoginController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'matricule' => 'required|email',
+            'matricule' => 'required',
             'password' => 'required'
         ]);
 
@@ -89,7 +89,7 @@ class UserLoginController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/register",
+     *     path="/api/user/register",
      *     tags={"Utilisateurs"},
      *     summary="Inscription d'un nouvel utilisateur",
      *     @OA\RequestBody(
