@@ -515,13 +515,13 @@
                 ]
             }
         },
-        "/api/login": {
+        "/api/user/login": {
             "post": {
                 "tags": [
                     "Utilisateurs"
                 ],
                 "summary": "Connexion d'un utilisateur",
-                "operationId": "14eafa2b5f0deb5a5ed5a48adc12506e",
+                "operationId": "1ec35339eba4f4040db55976c7bec3a9",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -604,13 +604,13 @@
                 }
             }
         },
-        "/api/register": {
+        "/api/user/register": {
             "post": {
                 "tags": [
                     "Utilisateurs"
                 ],
                 "summary": "Inscription d'un nouvel utilisateur",
-                "operationId": "383063b1a9212dad09c82168ac9f62fe",
+                "operationId": "1595c5dc5a9282a3bdb44ae98d8c55d9",
                 "requestBody": {
                     "required": true,
                     "content": {
