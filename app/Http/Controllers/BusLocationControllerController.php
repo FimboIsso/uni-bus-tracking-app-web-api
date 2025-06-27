@@ -26,7 +26,7 @@ class BusLocationControllerController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/bus-locations",
+     *     path="/api/bus-locations/store",
      *     tags={"BusLocation"},
      *     summary="Enregistrer la position GPS actuelle d’un bus",
      *     security={{"sanctum":{}}},
@@ -76,12 +76,12 @@ class BusLocationControllerController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/bus/{bus_id}/last-location",
+     *     path="/api/bus/{id}/last-location",
      *     tags={"BusLocation"},
      *     summary="Afficher la dernière position connue d’un bus",
      *     security={{"sanctum":{}}},
      *     @OA\Parameter(
-     *         name="bus_id",
+     *         name="id",
      *         in="path",
      *         description="ID du bus",
      *         required=true,

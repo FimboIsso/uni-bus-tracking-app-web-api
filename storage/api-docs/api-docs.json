@@ -3,34 +3,40 @@
     "info": {
         "title": "UniTracker API",
         "description": "L'API UniTracker permet de suivre en temps réel les bus universitaires, planifier les trajets, et recevoir des notifications intelligentes. Elle facilite la gestion des transports pour les étudiants et les chauffeurs via des requêtes HTTP sécurisées.",
-        "termsOfService": "https://unitracker.ucbc.cd/terms",
+        "termsOfService": "https://unitrack.uzashop.org/terms",
         "contact": {
             "name": "Équipe Support UniTracker",
-            "email": "support@unitracker.cd"
+            "url": "https://unitrack.uzashop.org/contact",
+            "email": "support@unitrack.uzashop.org"
         },
         "license": {
-            "name": "UCBC / UniTracker",
-            "url": "https://unitracker.ucbc.cd/license"
+            "name": "MIT License",
+            "url": "https://opensource.org/licenses/MIT"
         },
-        "version": "1.0"
+        "version": "1.0.0"
     },
     "servers": [
         {
-            "url": "https://unitracker.ucbc.cd",
+            "url": "https://unitrack.uzashop.org",
             "description": "Serveur de production"
+        },
+        {
+            "url": "http://localhost:8000",
+            "description": "Serveur de développement local"
         }
     ],
     "paths": {
-        "/api/buses": {
+        "/api/buses/get": {
             "get": {
                 "tags": [
                     "Bus"
                 ],
                 "summary": "Lister tous les bus",
-                "operationId": "f519550ca830b5dcb346e18781ed50b9",
+                "description": "Récupère la liste complète des bus avec leurs chauffeurs assignés",
+                "operationId": "7f42c4c961951953e5522bfb93b26446",
                 "responses": {
                     "200": {
-                        "description": "Liste des bus avec chauffeurs",
+                        "description": "Liste des bus avec chauffeurs récupérée avec succès",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -40,37 +46,79 @@
                                             "items": {
                                                 "properties": {
                                                     "id": {
-                                                        "type": "integer"
+                                                        "type": "integer",
+                                                        "example": 1
                                                     },
                                                     "immatriculation": {
-                                                        "type": "string"
+                                                        "type": "string",
+                                                        "example": "BENI-123"
                                                     },
                                                     "marque": {
-                                                        "type": "string"
+                                                        "type": "string",
+                                                        "example": "Toyota"
                                                     },
                                                     "modele": {
-                                                        "type": "string"
+                                                        "type": "string",
+                                                        "example": "Coaster"
                                                     },
                                                     "couleur": {
-                                                        "type": "string"
+                                                        "type": "string",
+                                                        "example": "Blanc"
                                                     },
                                                     "status": {
-                                                        "type": "string"
+                                                        "type": "string",
+                                                        "example": "actif"
                                                     },
                                                     "chauffeur_id": {
-                                                        "type": "integer"
+                                                        "type": "integer",
+                                                        "example": 3
+                                                    },
+                                                    "chauffeur": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 3
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Jean Dupont"
+                                                            },
+                                                            "matricule": {
+                                                                "type": "string",
+                                                                "example": "chauffeur001"
+                                                            }
+                                                        },
+                                                        "type": "object"
                                                     },
                                                     "created_at": {
                                                         "type": "string",
-                                                        "format": "date-time"
+                                                        "format": "date-time",
+                                                        "example": "2025-06-27T10:30:00.000000Z"
                                                     },
                                                     "updated_at": {
                                                         "type": "string",
-                                                        "format": "date-time"
+                                                        "format": "date-time",
+                                                        "example": "2025-06-27T10:30:00.000000Z"
                                                     }
                                                 },
                                                 "type": "object"
                                             }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
                                         }
                                     },
                                     "type": "object"
@@ -84,13 +132,16 @@
                         "sanctum": []
                     }
                 ]
-            },
+            }
+        },
+        "/api/buses/store": {
             "post": {
                 "tags": [
                     "Bus"
                 ],
                 "summary": "Créer un nouveau bus",
-                "operationId": "e1409a5d1e40f031070c6614524fe308",
+                "description": "Enregistre un nouveau bus dans le système avec un chauffeur assigné",
+                "operationId": "391fe2f87aa855b8946b05fd0dd0bdd3",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -102,22 +153,27 @@
                                 ],
                                 "properties": {
                                     "immatriculation": {
+                                        "description": "Numéro d'immatriculation unique du bus",
                                         "type": "string",
                                         "example": "BENI-123"
                                     },
                                     "marque": {
+                                        "description": "Marque du véhicule",
                                         "type": "string",
                                         "example": "Toyota"
                                     },
                                     "modele": {
+                                        "description": "Modèle du véhicule",
                                         "type": "string",
                                         "example": "Coaster"
                                     },
                                     "couleur": {
+                                        "description": "Couleur principale du bus",
                                         "type": "string",
                                         "example": "Blanc"
                                     },
                                     "chauffeur_id": {
+                                        "description": "ID du chauffeur assigné au bus",
                                         "type": "integer",
                                         "example": 3
                                     }
@@ -135,38 +191,82 @@
                                 "schema": {
                                     "properties": {
                                         "message": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Bus enregistré avec succès."
                                         },
                                         "bus": {
                                             "properties": {
                                                 "id": {
-                                                    "type": "integer"
+                                                    "type": "integer",
+                                                    "example": 1
                                                 },
                                                 "immatriculation": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "example": "BENI-123"
                                                 },
                                                 "marque": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "example": "Toyota"
                                                 },
                                                 "modele": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "example": "Coaster"
                                                 },
                                                 "couleur": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "example": "Blanc"
                                                 },
                                                 "chauffeur_id": {
-                                                    "type": "integer"
+                                                    "type": "integer",
+                                                    "example": 3
                                                 },
                                                 "created_at": {
                                                     "type": "string",
-                                                    "format": "date-time"
+                                                    "format": "date-time",
+                                                    "example": "2025-06-27T10:30:00.000000Z"
                                                 },
                                                 "updated_at": {
                                                     "type": "string",
-                                                    "format": "date-time"
+                                                    "format": "date-time",
+                                                    "example": "2025-06-27T10:30:00.000000Z"
                                                 }
                                             },
                                             "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erreur de validation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
                                         }
                                     },
                                     "type": "object"
@@ -182,36 +282,39 @@
                 ]
             }
         },
-        "/api/bus-journals": {
-            "get": {
+        "/api/bus-journals/get": {
+            "post": {
                 "tags": [
                     "BusJournal"
                 ],
                 "summary": "Lister les trajets du carnet de bord",
-                "operationId": "a016430eb2360c7d54ee7d4fed91f360",
-                "parameters": [
-                    {
-                        "name": "bus_id",
-                        "in": "query",
-                        "description": "Filtrer par ID de bus",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "chauffeur_id",
-                        "in": "query",
-                        "description": "Filtrer par ID de chauffeur",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
+                "description": "Récupère la liste des trajets avec les informations du bus et du chauffeur",
+                "operationId": "53b0c2f71d5c57e0d92204c51c6f136b",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "bus_id": {
+                                        "description": "Filtrer par ID de bus",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "chauffeur_id": {
+                                        "description": "Filtrer par ID de chauffeur",
+                                        "type": "integer",
+                                        "example": 3
+                                    }
+                                },
+                                "type": "object"
+                            }
                         }
                     }
-                ],
+                },
                 "responses": {
                     "200": {
-                        "description": "Liste des journaux",
+                        "description": "Liste des journaux récupérée avec succès",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -221,37 +324,102 @@
                                             "items": {
                                                 "properties": {
                                                     "id": {
-                                                        "type": "integer"
+                                                        "type": "integer",
+                                                        "example": 1
                                                     },
                                                     "bus_id": {
-                                                        "type": "integer"
+                                                        "type": "integer",
+                                                        "example": 1
                                                     },
                                                     "chauffeur_id": {
-                                                        "type": "integer"
+                                                        "type": "integer",
+                                                        "example": 3
                                                     },
                                                     "depart": {
-                                                        "type": "string"
+                                                        "type": "string",
+                                                        "example": "Campus UCBC"
                                                     },
                                                     "destination": {
-                                                        "type": "string"
+                                                        "type": "string",
+                                                        "example": "Faculté de Médecine"
                                                     },
                                                     "statut": {
-                                                        "type": "string"
+                                                        "type": "string",
+                                                        "example": "en_route"
                                                     },
                                                     "heure_depart": {
                                                         "type": "string",
-                                                        "format": "date-time"
+                                                        "format": "date-time",
+                                                        "example": "2025-06-27T08:00:00.000000Z"
                                                     },
                                                     "heure_arrivee": {
                                                         "type": "string",
-                                                        "format": "date-time"
+                                                        "format": "date-time",
+                                                        "example": "2025-06-27T08:30:00.000000Z"
                                                     },
                                                     "remarques": {
-                                                        "type": "string"
+                                                        "type": "string",
+                                                        "example": "Départ à l'heure"
+                                                    },
+                                                    "bus": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "immatriculation": {
+                                                                "type": "string",
+                                                                "example": "BENI-123"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "chauffeur": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 3
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Jean Dupont"
+                                                            },
+                                                            "matricule": {
+                                                                "type": "string",
+                                                                "example": "chauffeur001"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-06-27T10:30:00.000000Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-06-27T10:30:00.000000Z"
                                                     }
                                                 },
                                                 "type": "object"
                                             }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
                                         }
                                     },
                                     "type": "object"
@@ -265,13 +433,16 @@
                         "sanctum": []
                     }
                 ]
-            },
+            }
+        },
+        "/api/bus-journals/store": {
             "post": {
                 "tags": [
                     "BusJournal"
                 ],
                 "summary": "Créer un nouveau trajet dans le carnet de bord",
-                "operationId": "6ee60a305093583ccb3668eeb093b18b",
+                "description": "Enregistre un nouveau trajet de bus avec les détails du départ et de la destination",
+                "operationId": "d1fb26a22928086c34fc73158ca6d0ba",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -286,27 +457,33 @@
                                 ],
                                 "properties": {
                                     "bus_id": {
+                                        "description": "ID du bus effectuant le trajet",
                                         "type": "integer",
                                         "example": 1
                                     },
                                     "chauffeur_id": {
+                                        "description": "ID du chauffeur responsable",
                                         "type": "integer",
                                         "example": 3
                                     },
                                     "depart": {
+                                        "description": "Point de départ",
                                         "type": "string",
                                         "example": "Campus UCBC"
                                     },
                                     "destination": {
+                                        "description": "Point d'arrivée",
                                         "type": "string",
                                         "example": "Faculté de Médecine"
                                     },
                                     "heure_depart": {
+                                        "description": "Heure prévue de départ",
                                         "type": "string",
                                         "format": "date-time",
-                                        "example": "2025-04-15T08:00:00Z"
+                                        "example": "2025-06-27T08:00:00Z"
                                     },
                                     "remarques": {
+                                        "description": "Remarques optionnelles",
                                         "type": "string",
                                         "example": "Départ à l'heure"
                                     }
@@ -324,31 +501,96 @@
                                 "schema": {
                                     "properties": {
                                         "success": {
-                                            "type": "boolean"
+                                            "type": "boolean",
+                                            "example": true
                                         },
                                         "message": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Trajet enregistré dans le carnet de bord."
                                         },
                                         "journal": {
                                             "properties": {
                                                 "id": {
-                                                    "type": "integer"
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "bus_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "chauffeur_id": {
+                                                    "type": "integer",
+                                                    "example": 3
                                                 },
                                                 "statut": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "example": "en_route"
                                                 },
                                                 "depart": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "example": "Campus UCBC"
                                                 },
                                                 "destination": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "example": "Faculté de Médecine"
                                                 },
                                                 "heure_depart": {
                                                     "type": "string",
-                                                    "format": "date-time"
+                                                    "format": "date-time",
+                                                    "example": "2025-06-27T08:00:00.000000Z"
+                                                },
+                                                "remarques": {
+                                                    "type": "string",
+                                                    "example": "Départ à l'heure"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-06-27T10:30:00.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-06-27T10:30:00.000000Z"
                                                 }
                                             },
                                             "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erreur de validation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erreur de validation"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
                                         }
                                     },
                                     "type": "object"
@@ -364,13 +606,13 @@
                 ]
             }
         },
-        "/api/bus-locations": {
+        "/api/bus-locations/store": {
             "post": {
                 "tags": [
                     "BusLocation"
                 ],
                 "summary": "Enregistrer la position GPS actuelle d’un bus",
-                "operationId": "a2ab7dee6891bb3fbe0079c01ab98d9f",
+                "operationId": "e17e0a2eab044185fcc1133cdf406dd7",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -447,16 +689,16 @@
                 ]
             }
         },
-        "/api/bus/{bus_id}/last-location": {
+        "/api/bus/{id}/last-location": {
             "get": {
                 "tags": [
                     "BusLocation"
                 ],
                 "summary": "Afficher la dernière position connue d’un bus",
-                "operationId": "6b9c0adfea6da7cc8c0d551523b02594",
+                "operationId": "9752b54831431c2c0cd23d4478a395a2",
                 "parameters": [
                     {
-                        "name": "bus_id",
+                        "name": "id",
                         "in": "path",
                         "description": "ID du bus",
                         "required": true,
@@ -781,6 +1023,16 @@
                         }
                     }
                 }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "description": "Authentification via Laravel Sanctum",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
             }
         }
     },

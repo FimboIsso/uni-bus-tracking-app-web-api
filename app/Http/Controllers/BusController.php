@@ -6,52 +6,42 @@ use App\Models\Bus;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
 
-/**
- * @OA\OpenApi(
- *     @OA\Info(
- *         title="UniTracker API",
- *         version="1.0",
- *         description="L'API UniTracker permet de suivre en temps réel les bus universitaires, planifier les trajets, et recevoir des notifications intelligentes. Elle facilite la gestion des transports pour les étudiants et les chauffeurs via des requêtes HTTP sécurisées.",
- *         termsOfService="https://unitracker.ucbc.cd/terms",
- *         @OA\Contact(
- *             email="support@unitracker.cd",
- *             name="Équipe Support UniTracker"
- *         ),
- *         @OA\License(
- *             name="UCBC / UniTracker",
- *             url="https://unitracker.ucbc.cd/license"
- *         )
- *     ),
- *     @OA\Server(
- *         url="https://unitracker.ucbc.cd",
- *         description="Serveur de production"
- *     )
- * )
- */
-
 class BusController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/buses",
+     *     path="/api/buses/get",
      *     tags={"Bus"},
      *     summary="Lister tous les bus",
+     *     description="Récupère la liste complète des bus avec leurs chauffeurs assignés",
      *     security={{"sanctum":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="Liste des bus avec chauffeurs",
+     *         description="Liste des bus avec chauffeurs récupérée avec succès",
      *         @OA\JsonContent(
      *             @OA\Property(property="buses", type="array", @OA\Items(
-     *                 @OA\Property(property="id", type="integer"),
-     *                 @OA\Property(property="immatriculation", type="string"),
-     *                 @OA\Property(property="marque", type="string"),
-     *                 @OA\Property(property="modele", type="string"),
-     *                 @OA\Property(property="couleur", type="string"),
-     *                 @OA\Property(property="status", type="string"),
-     *                 @OA\Property(property="chauffeur_id", type="integer"),
-     *                 @OA\Property(property="created_at", type="string", format="date-time"),
-     *                 @OA\Property(property="updated_at", type="string", format="date-time")
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="immatriculation", type="string", example="BENI-123"),
+     *                 @OA\Property(property="marque", type="string", example="Toyota"),
+     *                 @OA\Property(property="modele", type="string", example="Coaster"),
+     *                 @OA\Property(property="couleur", type="string", example="Blanc"),
+     *                 @OA\Property(property="status", type="string", example="actif"),
+     *                 @OA\Property(property="chauffeur_id", type="integer", example=3),
+     *                 @OA\Property(property="chauffeur", type="object",
+     *                     @OA\Property(property="id", type="integer", example=3),
+     *                     @OA\Property(property="name", type="string", example="Jean Dupont"),
+     *                     @OA\Property(property="matricule", type="string", example="chauffeur001")
+     *                 ),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-06-27T10:30:00.000000Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2025-06-27T10:30:00.000000Z")
      *             ))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Non autorisé",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
      *         )
      *     )
      * )
@@ -67,36 +57,52 @@ class BusController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/buses",
+     *     path="/api/buses/store",
      *     tags={"Bus"},
      *     summary="Créer un nouveau bus",
+     *     description="Enregistre un nouveau bus dans le système avec un chauffeur assigné",
      *     security={{"sanctum":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
      *             required={"immatriculation", "chauffeur_id"},
-     *             @OA\Property(property="immatriculation", type="string", example="BENI-123"),
-     *             @OA\Property(property="marque", type="string", example="Toyota"),
-     *             @OA\Property(property="modele", type="string", example="Coaster"),
-     *             @OA\Property(property="couleur", type="string", example="Blanc"),
-     *             @OA\Property(property="chauffeur_id", type="integer", example=3)
+     *             @OA\Property(property="immatriculation", type="string", example="BENI-123", description="Numéro d'immatriculation unique du bus"),
+     *             @OA\Property(property="marque", type="string", example="Toyota", description="Marque du véhicule"),
+     *             @OA\Property(property="modele", type="string", example="Coaster", description="Modèle du véhicule"),
+     *             @OA\Property(property="couleur", type="string", example="Blanc", description="Couleur principale du bus"),
+     *             @OA\Property(property="chauffeur_id", type="integer", example=3, description="ID du chauffeur assigné au bus")
      *         )
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Bus enregistré avec succès",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="message", type="string", example="Bus enregistré avec succès."),
      *             @OA\Property(property="bus", type="object",
-     *                 @OA\Property(property="id", type="integer"),
-     *                 @OA\Property(property="immatriculation", type="string"),
-     *                 @OA\Property(property="marque", type="string"),
-     *                 @OA\Property(property="modele", type="string"),
-     *                 @OA\Property(property="couleur", type="string"),
-     *                 @OA\Property(property="chauffeur_id", type="integer"),
-     *                 @OA\Property(property="created_at", type="string", format="date-time"),
-     *                 @OA\Property(property="updated_at", type="string", format="date-time")
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="immatriculation", type="string", example="BENI-123"),
+     *                 @OA\Property(property="marque", type="string", example="Toyota"),
+     *                 @OA\Property(property="modele", type="string", example="Coaster"),
+     *                 @OA\Property(property="couleur", type="string", example="Blanc"),
+     *                 @OA\Property(property="chauffeur_id", type="integer", example=3),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-06-27T10:30:00.000000Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2025-06-27T10:30:00.000000Z")
      *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erreur de validation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Non autorisé",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
      *         )
      *     )
      * )
