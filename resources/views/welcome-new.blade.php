@@ -410,6 +410,10 @@
                         de niveau international pour répondre aux besoins locaux."
                     </p>
                     <p class="mt-4 font-semibold">- Équipe de développement UCBC</p>
+                    <p class="mt-4 text-sm text-white/70">
+                        En partenariat avec <span class="font-semibold text-white">UZASHOP SARLU</span> pour
+                        l'hébergement et le support technique
+                    </p>
                 </div>
             </div>
         </div>
@@ -440,6 +444,11 @@
                 <p>&copy; 2025 UniTracker. Développé avec ❤️ par les étudiants UCBC pour améliorer le transport
                     universitaire.</p>
                 <p class="text-sm mt-2">Université Catholique du Bukavu (UCBC) - Innovation étudiante</p>
+                <p class="text-sm mt-2 flex items-center justify-center">
+                    <span>Powered by</span>
+                    <span class="mx-2 font-semibold text-primary-600">UZASHOP SARLU</span>
+                    <i class="fas fa-bolt text-yellow-500 ml-1"></i>
+                </p>
             </div>
         </div>
     </footer>
