@@ -9,7 +9,35 @@ use Illuminate\Support\Facades\Hash;
 class UserLoginController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/users/get",
+     *     tags={"Utilisateurs"},
+     *     summary="Récupérer la liste de tous les utilisateurs",
+     *     description="Retourne la liste complète des utilisateurs triés par date de création (plus récents en premier)",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Liste des utilisateurs récupérée avec succès",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="users", type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="John Doe"),
+     *                     @OA\Property(property="matricule", type="string", example="user123"),
+     *                     @OA\Property(property="role", type="string", example="etudiant"),
+     *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-06-27T10:30:00.000000Z")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Erreur interne du serveur")
+     *         )
+     *     )
+     * )
      */
     public function index()
     {
